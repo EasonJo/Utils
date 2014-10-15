@@ -19,8 +19,6 @@ import java.util.Locale;
 
 /**
  * 执行命令行工具类,可以用来执行一些Android Shell的命令.
- *
- * @author yangxiaolong 2014-04-30
  */
 public class CommandUtil {
 
@@ -78,9 +76,9 @@ public class CommandUtil {
 
             errorMsg = new StringBuilder();
             successReader = new BufferedReader(new InputStreamReader(
-                    process.getInputStream()));
+                process.getInputStream()));
             errorReader = new BufferedReader(new InputStreamReader(
-                    process.getErrorStream()));
+                process.getErrorStream()));
             String lineStr;
             while ((lineStr = successReader.readLine()) != null) {
                 results.add(lineStr);
@@ -114,8 +112,8 @@ public class CommandUtil {
             }
         }
         debug(String.format(Locale.CHINA,
-                "execute command end,errorMsg:%s,and status %d: ", errorMsg,
-                status));
+            "execute command end,errorMsg:%s,and status %d: ", errorMsg,
+            status));
         return results;
     }
 
