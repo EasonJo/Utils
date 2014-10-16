@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.eason.util;
 
 import android.os.SystemClock;
@@ -8,48 +24,12 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Log Util Class
+ * Logging helper class.
  */
-public final class Slog {
+public class VolleyLog {
+    public static String TAG = "Volley";
 
-    private static final boolean isLog = true;
-    private static String TAG = "@LenovoTv";
     public static boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
-    /**
-     * 1, debug level 2, error level
-     */
-    private static int level = 1;
-
-    private Slog() {
-    }
-
-    public static void d(String TAG, String msg) {
-        Log.d(TAG, buildMessage(msg));
-    }
-
-    public static void v(String TAG, String msg) {
-        Log.v(TAG, buildMessage(msg));
-    }
-
-    public static void i(String TAG, String msg) {
-        Log.i(TAG, buildMessage(msg));
-    }
-
-    public static void w(String TAG, String msg) {
-        Log.w(TAG, buildMessage(msg));
-    }
-
-    public static void e(String TAG, String msg) {
-        Log.e(TAG, buildMessage(msg));
-    }
-
-    public static void e(String TAG, String msg, Throwable tr) {
-        Log.e(TAG, buildMessage("msg %s throwable %s", msg, tr));
-    }
-
-    public static void log(String msg) {
-        Log.i(TAG, buildMessage(msg));
-    }
 
     /**
      * Customize the log tag for your application, so that other apps
@@ -129,6 +109,19 @@ public final class Slog {
          * Minimum duration from first marker to last in an marker log to warrant logging.
          */
         private static final long MIN_DURATION_FOR_LOGGING_MS = 0;
+
+        private static class Marker {
+            public final String name;
+            public final long thread;
+            public final long time;
+
+            public Marker(String name, long thread, long time) {
+                this.name = name;
+                this.thread = thread;
+                this.time = time;
+            }
+        }
+
         private final List<Marker> mMarkers = new ArrayList<Marker>();
         private boolean mFinished = false;
 
@@ -187,18 +180,6 @@ public final class Slog {
             long first = mMarkers.get(0).time;
             long last = mMarkers.get(mMarkers.size() - 1).time;
             return last - first;
-        }
-
-        private static class Marker {
-            public final String name;
-            public final long thread;
-            public final long time;
-
-            public Marker(String name, long thread, long time) {
-                this.name = name;
-                this.thread = thread;
-                this.time = time;
-            }
         }
     }
 }
