@@ -13,42 +13,15 @@ import java.util.Locale;
 public final class Slog {
 
     private static final boolean isLog = true;
+    //    public static boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
+    public static boolean DEBUG = true;
     private static String TAG = "@LenovoTv";
-    public static boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
     /**
      * 1, debug level 2, error level
      */
     private static int level = 1;
 
     private Slog() {
-    }
-
-    public static void d(String TAG, String msg) {
-        Log.d(TAG, buildMessage(msg));
-    }
-
-    public static void v(String TAG, String msg) {
-        Log.v(TAG, buildMessage(msg));
-    }
-
-    public static void i(String TAG, String msg) {
-        Log.i(TAG, buildMessage(msg));
-    }
-
-    public static void w(String TAG, String msg) {
-        Log.w(TAG, buildMessage(msg));
-    }
-
-    public static void e(String TAG, String msg) {
-        Log.e(TAG, buildMessage(msg));
-    }
-
-    public static void e(String TAG, String msg, Throwable tr) {
-        Log.e(TAG, buildMessage("msg %s throwable %s", msg, tr));
-    }
-
-    public static void log(String msg) {
-        Log.i(TAG, buildMessage(msg));
     }
 
     /**
@@ -67,22 +40,97 @@ public final class Slog {
         DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
     }
 
+    public static void log(String msg) {
+        Log.i(TAG, buildMessage(msg));
+    }
+
+    public static void log(String format, String msg) {
+        Log.i(TAG, buildMessage(format, msg));
+    }
+
+    /*public static void i(String tag, String msg) {
+        if (DEBUG) {
+            Log.i(tag, buildMessage(msg));
+        }
+    }*/
+
+    public static void i(String format, Object... args) {
+        if (DEBUG) {
+            Log.i(TAG, buildMessage(format, args));
+        }
+    }
+
+    public static void i(String tag, String format, Object... args) {
+        if (DEBUG) {
+            Log.i(tag, buildMessage(format, args));
+        }
+    }
+
+    /*public static void v(String tag, String msg) {
+        if (DEBUG){
+            Log.v(tag, buildMessage(msg));
+        }
+    }*/
+
     public static void v(String format, Object... args) {
         if (DEBUG) {
             Log.v(TAG, buildMessage(format, args));
         }
     }
 
+    public static void v(String tag, String format, Object... args) {
+        if (DEBUG) {
+            Log.v(tag, buildMessage(format, args));
+        }
+    }
+
+    /*public static void d(String TAG, String msg) {
+        if (DEBUG){
+            Log.d(TAG, buildMessage(msg));
+        }
+    }*/
+
     public static void d(String format, Object... args) {
-        Log.d(TAG, buildMessage(format, args));
+        if (DEBUG) {
+            Log.d(TAG, buildMessage(format, args));
+        }
+    }
+
+    public static void d(String tag, String format, Object... args) {
+        if (DEBUG) {
+            Log.d(tag, buildMessage(format, args));
+        }
+    }
+
+    /*public static void e(String TAG, String msg) {
+        Log.e(TAG, buildMessage(msg));
+    }*/
+
+    public static void e(String TAG, String msg, Throwable tr) {
+        Log.e(TAG, buildMessage("msg %s throwable %s", msg, tr));
     }
 
     public static void e(String format, Object... args) {
         Log.e(TAG, buildMessage(format, args));
     }
 
+    public static void e(String tag, String format, Object... args) {
+        if (DEBUG) {
+            Log.e(tag, buildMessage(format, args));
+        }
+    }
+
     public static void e(Throwable tr, String format, Object... args) {
         Log.e(TAG, buildMessage(format, args), tr);
+    }
+
+
+    public static void w(String format, String msg) {
+        Log.w(TAG, buildMessage(format, msg));
+    }
+
+    public static void w(String tag, String format, String msg) {
+        Log.w(tag, buildMessage(format, msg));
     }
 
     public static void wtf(String format, Object... args) {
@@ -106,16 +154,17 @@ public final class Slog {
         // It will be at least two frames up, so start there.
         for (int i = 2; i < trace.length; i++) {
             Class<?> clazz = trace[i].getClass();
-            if (!clazz.equals(VolleyLog.class)) {
+            if (!clazz.equals(Slog.class)) {
                 String callingClass = trace[i].getClassName();
+                Log.v(TAG, callingClass);
                 callingClass = callingClass.substring(callingClass.lastIndexOf('.') + 1);
                 callingClass = callingClass.substring(callingClass.lastIndexOf('$') + 1);
 
-                caller = callingClass + "." + trace[i].getMethodName();
+                caller = "[L:" + trace[i].getLineNumber() + "] " + callingClass + "." + trace[i].getMethodName();
                 break;
             }
         }
-        return String.format(Locale.US, "[%d] %s: %s",
+        return String.format(Locale.US, "[T:%d] %s: %s",
             Thread.currentThread().getId(), caller, msg);
     }
 
@@ -123,8 +172,6 @@ public final class Slog {
      * A simple event log with records containing a name, thread ID, and timestamp.
      */
     static class MarkerLog {
-        public static final boolean ENABLED = VolleyLog.DEBUG;
-
         /**
          * Minimum duration from first marker to last in an marker log to warrant logging.
          */
@@ -200,5 +247,7 @@ public final class Slog {
                 this.time = time;
             }
         }
+
+        public static final boolean ENABLED = Slog.DEBUG;
     }
 }
