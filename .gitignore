@@ -27,3 +27,4 @@ proguard/
 
 # IDE FILES
 *.iml
+module_utils.xml
