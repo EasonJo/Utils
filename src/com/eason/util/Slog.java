@@ -11,8 +11,6 @@ import java.util.Locale;
  * Log Util Class
  */
 public final class Slog {
-
-    private static final boolean isLog = true;
     //    public static boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE);
     public static boolean DEBUG = true;
     private static String TAG = "@LenovoTv";
