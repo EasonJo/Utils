@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.util.Base64;
+import com.eason.util.Slog;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +23,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static android.graphics.Bitmap.Config.ARGB_8888;
+import static android.graphics.Color.WHITE;
+import static android.graphics.PorterDuff.Mode.DST_IN;
 
 /**
  * 图片工具类
@@ -338,5 +343,37 @@ public class BitmapUtil {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return output;
+    }
+
+    /**
+     * Round the corners of a {@link Bitmap}
+     *
+     * @param source
+     * @param radius
+     * @return rounded corner bitmap
+     */
+    public static Bitmap roundCorners(final Bitmap source, final float radius) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(WHITE);
+
+        Bitmap clipped = Bitmap.createBitmap(width, height, ARGB_8888);
+        Canvas canvas = new Canvas(clipped);
+        canvas.drawRoundRect(new RectF(0, 0, width, height), radius, radius,
+            paint);
+        paint.setXfermode(new PorterDuffXfermode(DST_IN));
+
+        Bitmap rounded = Bitmap.createBitmap(width, height, ARGB_8888);
+        canvas = new Canvas(rounded);
+        canvas.drawBitmap(source, 0, 0, null);
+        canvas.drawBitmap(clipped, 0, 0, paint);
+
+        source.recycle();
+        clipped.recycle();
+
+        return rounded;
     }
 }
